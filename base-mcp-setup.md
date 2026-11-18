@@ -8,6 +8,8 @@
 
 Step-by-step guide for wiring [Base MCP](https://docs.base.org/ai-agents/quickstart) into an AI coding agent (Claude Code used here) so it can read the Klima Protocol liquidity, prepare retirements, and settle them from a Base Account.
 
+> **Upstream change, 27 October 2026.** The `base-mcp` skill this guide installs in step 3 was removed from `base/skills`; Coinbase now maintains it as `wallet-mcp` in [`coinbase/agents`](https://github.com/coinbase/agents). Steps 3 and 4 below describe the earlier layout and have not yet been rewritten for the new one. The HTTP endpoint and the SDK do not depend on Base MCP.
+
 > **What you get:** a non-custodial Base Account wallet exposed to the agent via `mcp.base.org`, plus the Klima retirement plugin that turns "retire 1 tonne of wind energy" into an on-chain `[approve, retire]` batch and a public Carbonmark certificate.
 
 ## Prerequisites

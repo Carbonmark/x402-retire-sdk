@@ -1,7 +1,60 @@
 {
-  "name": "@klimadao/x402-retire",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Zero-dependency TypeScript client for retiring tokenized carbon on Base via the Klima x402 endpoint.",
-  "type": "module"
+  "name": "@carbonmark/x402-retire",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Zero-dependency TypeScript client for retiring tokenized carbon credits on Base through the x402 Carbon Retirement API, with a public Carbonmark certificate for every retirement.",
+  "keywords": [
+    "carbon",
+    "carbon-credits",
+    "carbon-retirement",
+    "carbon-offset",
+    "carbonmark",
+    "klima",
+    "x402",
+    "base",
+    "usdc",
+    "ai-agents",
+    "eip-3009"
+  ],
+  "homepage": "https://docs.carbonmark.com/carbonmark-x402/carbonmark-x402",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation.git",
+    "directory": "sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/klima-retire.d.ts",
+      "default": "./dist/klima-retire.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/klima-retire.d.ts",
+  "files": [
+    "dist",
+    "klima-retire.ts",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test klima-retire.test.ts scripts/release-guard.test.mjs",
+    "changelog:check": "node scripts/changelog-check.mjs",
+    "prepack": "npm run changelog:check && npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "^7.0.2"
+  }
 }

@@ -137,6 +137,10 @@ const prep = await post({
         ...(cfg.creditToken ? { creditToken: cfg.creditToken } : {}),
       }),
   amount: cfg.amount,
+  // A relayed retirement must name its beneficiary, or prepare-auth returns
+  // 400 attribution_required. This credits the paying wallet deliberately;
+  // set details.beneficiaryAddress instead to credit another party.
+  beneficiaryIsPayer: true,
   details: {
     // certificate attribution — immutable once confirmed
     beneficiaryString: cfg.beneficiary,

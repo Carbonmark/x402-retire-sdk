@@ -46,7 +46,10 @@ export interface DiscoverFilters {
   source?: SupplySource;
   carbonClass?: string;
   creditToken?: string;
+  /** A project id, in either form ("1234" or "VCS-1234"). Matches every vintage of it. */
   project?: string;
+  /** One project at one vintage, e.g. "VCS-1234-2020". Narrower than `project`. */
+  credit?: string;
   vintage?: number;
   country?: string;
   category?: string;
@@ -244,7 +247,7 @@ export function createClient(options: KlimaClientOptions = {}): KlimaClient {
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   if (!doFetch) {
     throw new KlimaRetireError(
-      "No fetch available. Use Node 18+ or pass options.fetch.",
+      "No fetch available. Use Node 20+ or pass options.fetch.",
       500,
     );
   }

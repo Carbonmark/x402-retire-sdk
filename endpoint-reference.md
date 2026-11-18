@@ -219,7 +219,7 @@ The relay path lets **any wallet or agent** retire without holding native ETH, w
 
 ### Client SDK
 
-The four steps are wrapped in a tiny, **zero-dependency** TypeScript client — [`sdk/klima-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts). Drop the single file into your project (or `npm i @klimadao/x402-retire` once published — same API). It's **signer-agnostic**: you pass a `signTypedData` callback, so it works with viem, ethers, a browser wallet, or an agent's signer with no hard wallet dependency.
+The four steps are wrapped in a tiny, **zero-dependency** TypeScript client — [`sdk/klima-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts). Install it with `npm install @carbonmark/x402-retire`, or drop the single file into your project (same API). It's **signer-agnostic**: you pass a `signTypedData` callback, so it works with viem, ethers, a browser wallet, or an agent's signer with no hard wallet dependency.
 
 ```ts
 import { createClient } from "./klima-retire";
@@ -284,7 +284,7 @@ plus code-specific context fields (`issues` on `schema_validation`, `expectedNon
 | `document_not_found` | 404 | request | no | No documentation document with the requested `id` (from `/api/docs?id=…`). Use one of the ids in the error's `available` list, or fetch the index at /api/docs. |
 | `schema_validation` | 400 | request | no | The body failed schema validation. `issues` carries the offending path and reason. Bodies are strict at the top level and inside `details`, so an unrecognized key is an error rather than being silently dropped. Read `issues[].path` and `issues[].keys`. For `unrecognized_keys`, check the key belongs where you put it — attribution fields go inside `details`, not at the top level. |
 | `internal_error` | 500 | request | yes | An unhandled server-side failure. Retry with backoff. If it persists, report it via the contact in /.well-known/security.txt with the request body. |
-| `unsupported_chain_id` | 400 | resolution | no | `chainId` is not a supported network. Use 8453 (Base mainnet) or 84532 (Base Sepolia). |
+| `unsupported_chain_id` | 400 | resolution | no | `chainId` is not a supported network. Use 8453 (Base mainnet), the only supported network. 84532 (Base Sepolia) is recognised by the schema but not served. |
 | `unsupported_input_token` | 400 | resolution | no | `inputToken` is not an accepted payment token on this chain. Use the USDC or kVCM address for the chain — see the manifest, or the addresses in the endpoint documentation. |
 | `invalid_input_token` | 400 | resolution | no | `inputToken` passed validation but matches neither settlement path (EIP-3009 USDC nor EIP-2612 kVCM), so no relay function applies. Use the chain's USDC or kVCM address. |
 | `no_candidates` | 404 | resolution | yes | No credit in the carbon class matched the request filters, or the class holds no credits. Call `discover` to list live classes and credits, then retry with a `carbonClass`/`creditToken` from that response. Retryable because class inventory changes. |
