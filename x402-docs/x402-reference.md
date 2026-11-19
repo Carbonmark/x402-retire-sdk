@@ -178,7 +178,7 @@ For relay-specific `actions/retire` status values (`settled`, `pending_index`), 
 ## Resources
 
 * [Paid-retire examples](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/tree/main/examples) — runnable end-to-end relay clients (USDC + kVCM)
-* [TypeScript SDK](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts) — zero-dependency `retire()` client
+* [TypeScript SDK](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/x402-retire.ts) — zero-dependency `retire()` client
 * [Klima Retirement Aggregator USAGE](https://github.com/KlimaDAO/retirement-aggregator/blob/main/USAGE.md) — direct on-chain access for callers who do not want the HTTP layer
 * [Discovery manifest](https://x402.klimalabs.com/.well-known/x402.json) — public `x402.json` for agent directories
 * [Changelog](https://x402.klimalabs.com/.well-known/x402-changelog.json) — machine-readable release history

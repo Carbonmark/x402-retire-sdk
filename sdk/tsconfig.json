@@ -10,5 +10,5 @@
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["klima-retire.ts", "klima-retire.test.ts"]
+  "include": ["x402-retire.ts", "x402-retire.test.ts"]
 }

@@ -9,7 +9,6 @@
     "carbon-retirement",
     "carbon-offset",
     "carbonmark",
-    "klima",
     "x402",
     "base",
     "usdc",
@@ -29,15 +28,15 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/klima-retire.d.ts",
-      "default": "./dist/klima-retire.js"
+      "types": "./dist/x402-retire.d.ts",
+      "default": "./dist/x402-retire.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/klima-retire.d.ts",
+  "types": "./dist/x402-retire.d.ts",
   "files": [
     "dist",
-    "klima-retire.ts",
+    "x402-retire.ts",
     "CHANGELOG.md"
   ],
   "engines": {
@@ -46,7 +45,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --test klima-retire.test.ts scripts/release-guard.test.mjs",
+    "test": "node --test x402-retire.test.ts scripts/release-guard.test.mjs",
     "changelog:check": "node scripts/changelog-check.mjs",
     "prepack": "npm run changelog:check && npm run build"
   },

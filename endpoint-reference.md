@@ -219,10 +219,10 @@ The relay path lets **any wallet or agent** retire without holding native ETH, w
 
 ### Client SDK
 
-The four steps are wrapped in a tiny, **zero-dependency** TypeScript client — [`sdk/klima-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts). Install it with `npm install @carbonmark/x402-retire`, or drop the single file into your project (same API). It's **signer-agnostic**: you pass a `signTypedData` callback, so it works with viem, ethers, a browser wallet, or an agent's signer with no hard wallet dependency.
+The four steps are wrapped in a tiny, **zero-dependency** TypeScript client — [`sdk/x402-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/x402-retire.ts). Install it with `npm install @carbonmark/x402-retire`, or drop the single file into your project (same API). It's **signer-agnostic**: you pass a `signTypedData` callback, so it works with viem, ethers, a browser wallet, or an agent's signer with no hard wallet dependency.
 
 ```ts
-import { createClient } from "./klima-retire";
+import { createClient } from "./x402-retire";
 import { privateKeyToAccount } from "viem/accounts"; // or ethers, or a browser wallet
 
 const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
