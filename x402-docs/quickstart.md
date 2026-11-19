@@ -139,4 +139,4 @@ The smallest retirement is 1 kg, and every retirement carries a minimum fee. To 
 * [Gasless retirement (paid relay)](./gasless-retirement-paid-relay.md): what you sign, the responses and their error codes.
 * [Retire carbon with x402](./retire-carbon-with-x402.md): submit the transaction from your own wallet instead.
 * [Use x402 from an AI agent](./use-x402-from-an-ai-agent.md): connect the endpoint to a wallet-connected agent.
-* [TypeScript SDK](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts): one `retire()` call that wraps the same four steps.
+* [TypeScript SDK](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/x402-retire.ts): one `retire()` call that wraps the same four steps.

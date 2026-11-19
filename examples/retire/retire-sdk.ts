@@ -8,18 +8,18 @@
 
 import { parseArgs } from "node:util";
 import { privateKeyToAccount } from "viem/accounts";
-import { createClient, KlimaRetireError } from "../../sdk/klima-retire.js";
+import { createClient, RetireError } from "../../sdk/x402-retire.js";
 
 // ─── defaults (override with flags or env; flag > env > default) ──────────────
 const CONFIG = {
   amount: "1", // tonnes (min 0.001)
-  carbonClass: "0x0008f35758a4318942EcB5d5414116ce7B1Ede2d", // from klima.discover()
+  carbonClass: "0x0008f35758a4318942EcB5d5414116ce7B1Ede2d", // from client.discover()
   creditToken: undefined as string | undefined, // pin a credit, or let the server pick
   listingId: undefined as string | undefined,
   inputToken: "usdc", // "usdc" | "kvcm" | a token address
   beneficiary: "x402 SDK example", // certificate attribution (immutable once confirmed)
   message: "Retired via the x402 Carbon Retirement API",
-  baseUrl: "https://x402.klimalabs.com", // endpoint origin (no trailing /api)
+  baseUrl: "https://x402.carbonmark.com", // endpoint origin (no trailing /api)
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -90,10 +90,10 @@ if (!PRIVATE_KEY) {
 }
 
 const account = privateKeyToAccount(PRIVATE_KEY);
-const klima = createClient({ baseUrl: cfg.baseUrl }); // chainId defaults to 8453
+const client = createClient({ baseUrl: cfg.baseUrl }); // chainId defaults to 8453
 
 try {
-  const result = await klima.retire({
+  const result = await client.retire({
     from: account.address,
     signTypedData: (td) => account.signTypedData(td as any), // signer-agnostic; see README
 
@@ -121,7 +121,7 @@ try {
     console.log(`${r.amountInTonnes} t  →  ${r.certificateUrl}`);
   }
 } catch (err) {
-  if (err instanceof KlimaRetireError) {
+  if (err instanceof RetireError) {
     console.error(`\n✗ ${err.code ?? err.status}: ${err.message}`);
     process.exit(1);
   }

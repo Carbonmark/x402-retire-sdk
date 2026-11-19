@@ -115,7 +115,7 @@ See [x402 reference](./x402-reference.md) for the full error registry.
 ## Reference clients
 
 * **Quickstart** — a complete script for this path, with a dry-run switch: [Quickstart](./quickstart.md).
-* **SDK** — zero-dependency TypeScript client [`sdk/klima-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts). One `retire()` call runs prepare-auth → sign → submit → poll certificate. Pass `beneficiaryIsPayer: true` or `details.beneficiaryAddress`.
+* **SDK** — zero-dependency TypeScript client [`sdk/x402-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/x402-retire.ts). One `retire()` call runs prepare-auth → sign → submit → poll certificate. Pass `beneficiaryIsPayer: true` or `details.beneficiaryAddress`.
 * **Examples** — runnable scripts under [`examples/`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/tree/main/examples) (`retire/retire-sdk.ts`, `retire/paid-retire.ts`, `retire/retire-raw.ts`).
 
 ## Notes

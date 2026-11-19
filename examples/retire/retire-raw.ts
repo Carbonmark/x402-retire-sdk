@@ -19,7 +19,7 @@ const CONFIG = {
   inputToken: "usdc", // "usdc" | "kvcm" | a token address
   beneficiary: "x402 walkthrough", // certificate attribution (immutable once confirmed)
   message: "Retired via the x402 Carbon Retirement API",
-  baseUrl: "https://x402.klimalabs.com", // endpoint origin (no trailing /api)
+  baseUrl: "https://x402.carbonmark.com", // endpoint origin (no trailing /api)
   chainId: 8453, // Base mainnet
 };
 // ─────────────────────────────────────────────────────────────────────────────
