@@ -10,6 +10,10 @@ Wire the x402 Carbon Retirement API into any Base MCP–capable AI agent so it c
 
 The x402 Carbon Retirement API is built for the x402 agent-payments ecosystem and plugs directly into Base MCP. The fastest path is the Klima Base MCP plugin, which connects the endpoint to agents such as Claude Code.
 
+{% hint style="warning" %}
+On 27 October 2026 the `base-mcp` skill was removed from `base/skills`; Coinbase now maintains it as `wallet-mcp` in [`coinbase/agents`](https://github.com/coinbase/agents). The setup guide linked below was written for the earlier layout. If its install step fails, use one of the direct integrations under [Prefer a direct integration?](#prefer-a-direct-integration), which do not depend on Base MCP.
+{% endhint %}
+
 ## Setup
 
 {% stepper %}

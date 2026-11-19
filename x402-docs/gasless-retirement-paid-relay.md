@@ -87,6 +87,8 @@ Sign `typedData` in your wallet with `signTypedData`. This is the only signing s
 
 The signed budget (`authValue`) covers the retirement, the fee, and the executor's gas reimbursement, with a slippage buffer on protocol supply (a marketplace listing fills at a fixed price, so it gets none). The signer needs only an input-token balance (USDC or kVCM) — no ETH. Send the `actionsRetireRequest` body **verbatim** so that `from`, `to`, and (on USDC) `salt` match the signed authorization.
 
+`/quote` estimates the relay cost before you prepare anything: `relayExecutorGas` is the gas reimbursement and `relayTotal` is the retirement, fee and gas together, alongside the self-submit `total`.
+
 ## Filling a marketplace listing
 
 The relay path fills marketplace listings as well as protocol supply — pass `listingId` instead of `carbonClass` at `prepare-auth` and everything else is unchanged. Two differences are worth knowing before you sign:
@@ -112,6 +114,7 @@ See [x402 reference](./x402-reference.md) for the full error registry.
 
 ## Reference clients
 
+* **Quickstart** — a complete script for this path, with a dry-run switch: [Quickstart](./quickstart.md).
 * **SDK** — zero-dependency TypeScript client [`sdk/klima-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/klima-retire.ts). One `retire()` call runs prepare-auth → sign → submit → poll certificate. Pass `beneficiaryIsPayer: true` or `details.beneficiaryAddress`.
 * **Examples** — runnable scripts under [`examples/`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/tree/main/examples) (`retire/retire-sdk.ts`, `retire/paid-retire.ts`, `retire/retire-raw.ts`).
 

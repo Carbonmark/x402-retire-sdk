@@ -85,6 +85,7 @@ Prefer reading the Settlement Contract from each `prepare` / `prepare-auth` resp
 * Amounts are decimal tonne strings, with a minimum of `0.001` t (1 kg).
 * Toucan Puro credits retire in **whole tonnes only**.
 * Amounts above a credit's available liquidity are rejected.
+* `discover` returns each class's minimum as `minRetirementTonnes`.
 
 ## Fees
 
@@ -93,7 +94,8 @@ Discover, quote and certificate are free. Each retirement costs the credit price
 The fee (current values, subject to change; always read the live fee from `quote.fee`):
 
 * The fee is `max(floor, feeBps% of cost)`.
-* Marketplace listing fills use their own schedule: 5% of the fill cost, with a 0.05 USDC minimum.
+* Protocol supply (retired by `carbonClass`): the floor is 0.01 USDC and `feeBps` is 0, so the fee is a flat 0.01 USDC per retirement. Read from the Settlement Contract (`protocolFeeFloor`, `protocolFeeBps`) on 17 November 2026.
+* Marketplace listing fills use their own schedule: 5% of the fill cost, with a 0.05 USDC minimum (`marketplaceFeeBps`, `marketplaceFeeFloor`).
 * The floor is denominated in USDC (converted to kVCM via the pool when paying in kVCM).
 * It is always included in `quote.fee` and folded into `quote.total`.
 * The contract spends exactly `retirementCost + fee` and refunds any unused slippage budget in the same transaction.
@@ -121,7 +123,7 @@ plus code-specific context (`issues` on `schema_validation`, `expectedNonce` / `
 | `document_not_found` | 404 | request | no | No documentation document with the requested `id` (from `/api/docs?id=…`). Use one of the ids in the error's `available` list, or fetch the index at /api/docs. |
 | `schema_validation` | 400 | request | no | The body failed schema validation. `issues` carries the offending path and reason. Bodies are strict at the top level and inside `details`, so an unrecognized key is an error rather than being silently dropped. Read `issues[].path` and `issues[].keys`. For `unrecognized_keys`, check the key belongs where you put it — attribution fields go inside `details`, not at the top level. |
 | `internal_error` | 500 | request | yes | An unhandled server-side failure. Retry with backoff. If it persists, report it via the contact in /.well-known/security.txt with the request body. |
-| `unsupported_chain_id` | 400 | resolution | no | `chainId` is not a supported network. Use 8453 (Base mainnet) or 84532 (Base Sepolia). |
+| `unsupported_chain_id` | 400 | resolution | no | `chainId` is not a supported network. Use 8453 (Base mainnet), the only supported network. 84532 (Base Sepolia) is recognised by the schema but not served. |
 | `unsupported_input_token` | 400 | resolution | no | `inputToken` is not an accepted payment token on this chain. Use the USDC or kVCM address for the chain — see the manifest, or the addresses in the endpoint documentation. |
 | `invalid_input_token` | 400 | resolution | no | `inputToken` passed validation but matches neither settlement path (EIP-3009 USDC nor EIP-2612 kVCM), so no relay function applies. Use the chain's USDC or kVCM address. |
 | `no_candidates` | 404 | resolution | yes | No credit in the carbon class matched the request filters, or the class holds no credits. Call `discover` to list live classes and credits, then retry with a `carbonClass`/`creditToken` from that response. Retryable because class inventory changes. |

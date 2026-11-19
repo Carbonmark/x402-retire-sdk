@@ -4,18 +4,32 @@
   Edit the source file and open a PR there instead.
 -->
 
-# @klimadao/x402-retire
+# @carbonmark/x402-retire
 
 Zero-dependency TypeScript client for retiring tokenized carbon on **Base**
-through the x402 Carbon Retirement API using any wallet or agent.
+through the x402 Carbon Retirement API using any wallet or agent. Every
+retirement gets a public [Carbonmark](https://www.carbonmark.com/ai-agents)
+certificate.
 
-> **Drop-in today, package later.** `klima-retire.ts` is a single self-contained
-> file: copy it into your project now, or `npm i @klimadao/x402-retire` once
-> published. The `createClient()` API is identical either way.
+## Install
+
+```sh
+npm install @carbonmark/x402-retire
+```
+
+Requires Node 20 or newer. The package is ES modules only and ships its own
+type declarations.
+
+The client is also a single self-contained file, `klima-retire.ts`. If you would
+rather not add a dependency, copy that file into your project and import from it
+instead; the API is the same.
 
 ## Easy to integrate
 
-- **No dependencies.** Uses the global `fetch` (Node 18+ / browsers).
+- **No dependencies.** Uses the global `fetch`: Node 20+, Bun, Deno, and
+  serverless or edge functions. **Not from a web page yet:** the endpoint sends
+  no CORS headers, so a browser blocks the call. Run the client on a server and
+  hand only the signing step to the user's wallet.
 - **Signer-agnostic.** You pass a `signTypedData` callback — works with viem,
   ethers, a browser wallet, Coinbase AgentKit, or a KMS/MPC signer. No wallet
   library is bundled.
@@ -28,7 +42,7 @@ through the x402 Carbon Retirement API using any wallet or agent.
 ## Usage
 
 ```ts
-import { createClient } from "./klima-retire";
+import { createClient } from "@carbonmark/x402-retire";
 import { privateKeyToAccount } from "viem/accounts";
 
 const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
@@ -76,7 +90,8 @@ for (const r of retirements)
 // ethers v6
 signTypedData: (td) => signer.signTypedData(td.domain, td.types, td.message);
 
-// browser (EIP-1193)
+// browser wallet (EIP-1193). Signing happens in the page; the client calls
+// themselves must run server-side, see "No dependencies" above.
 signTypedData: (td) =>
   window.ethereum.request({
     method: "eth_signTypedData_v4",
@@ -107,4 +122,22 @@ the retirement being submitted is the one authorized. Dropping `salt` returns
 signing returns `400 params_mismatch`. `retire()` handles this for you.
 
 See the [endpoint reference](https://www.klimalabs.com/x402-endpoint) for the
-full request/response shapes.
+full request/response shapes, and the
+[x402 docs on docs.carbonmark.com](https://docs.carbonmark.com/carbonmark-x402/carbonmark-x402)
+for a walkthrough.
+
+## Development
+
+```sh
+npm ci             # two dev dependencies: typescript and @types/node
+npm run typecheck  # the client and its tests
+npm test           # node --test, stubbed fetch, no network
+npm run build      # emits dist/klima-retire.js and .d.ts
+npm run changelog:check  # newest CHANGELOG.md entry == package.json version
+```
+
+The tests run the TypeScript file directly, which needs Node 22.18 or newer. The
+built package itself supports Node 20+.
+
+Releases are listed in [CHANGELOG.md](./CHANGELOG.md). Licensed under the
+[MIT License](./LICENSE.txt).
