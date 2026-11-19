@@ -13,7 +13,7 @@ Full API + error reference is published at **[klimalabs.com/x402-endpoint](https
 | `plugins/klima-retire.md` | The Base MCP plugin |
 | `base-mcp-setup.md` | Step-by-step: connect Base MCP + load the plugin. |
 | `klima-retire-action.md` | HTTP endpoint reference for the relayed retirement (`discover` → `quote` → `actions/retire` → `certificate`). |
-| `sdk/` | Zero-dependency TypeScript client (`@klimadao/x402-retire`). One `retire()` call runs the whole flow. |
+| `sdk/` | Zero-dependency TypeScript client (`@carbonmark/x402-retire`). One `retire()` call runs the whole flow. |
 | `examples/` | Runnable examples: read-only discover/quote, the SDK retire path, and a raw-HTTP walkthrough. |
 
 ## Install
@@ -52,11 +52,11 @@ Then restart your agent.
 For calling the endpoint from a script, an app, or an agent (rather than through the MCP plugin), use the SDK. You sign one standard EIP-712 token authorization; a Klima executor relays the on-chain retirement and pays the gas (reimbursed from your signed budget). No native ETH, no prior approval, no Base Account: just an input-token balance.
 
 ```ts
-import { createClient } from "./sdk/klima-retire";
+import { createClient } from "./sdk/x402-retire";
 import { privateKeyToAccount } from "viem/accounts";
 
 const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
-const klima = createClient(); // https://x402.klimalabs.com, Base mainnet
+const klima = createClient(); // https://x402.carbonmark.com, Base mainnet
 
 const { status, transactionHash, retirements } = await klima.retire({
   from: account.address,
@@ -68,7 +68,7 @@ const { status, transactionHash, retirements } = await klima.retire({
 });
 ```
 
-**Drop-in today, package later.** `sdk/klima-retire.ts` is a single zero-dependency file: copy it into your project and import it directly (as the examples do). Once the package is published you can instead `npm i @klimadao/x402-retire` and change only the import line; the `createClient()` API is identical either way.
+**Drop-in today, package later.** `sdk/x402-retire.ts` is a single zero-dependency file: copy it into your project and import it directly (as the examples do). Once the package is published you can instead `npm i @carbonmark/x402-retire` and change only the import line; the `createClient()` API is identical either way.
 
 Start here:
 

@@ -4,7 +4,7 @@
  */
 
 import { parseArgs } from "node:util";
-import { createClient, KlimaRetireError } from "../../sdk/klima-retire.js";
+import { createClient, RetireError } from "../../sdk/x402-retire.js";
 
 // ─── defaults (override with flags or env; flag > env > default) ──────────────
 const CONFIG = {
@@ -109,7 +109,7 @@ try {
     `Paste carbonClass (and optionally creditToken) into retire-sdk.ts CONFIG to retire.\n`,
   );
 } catch (err) {
-  if (err instanceof KlimaRetireError) {
+  if (err instanceof RetireError) {
     console.error(`\n✗ ${err.code ?? err.status}: ${err.message}`);
     process.exit(1);
   }
