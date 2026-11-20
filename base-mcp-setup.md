@@ -4,13 +4,13 @@
   Edit the source file and open a PR there instead.
 -->
 
-# Base MCP setup — connect a wallet and load the Klima plugin
+# Base MCP setup — connect a wallet and load the Carbonmark x402 plugin
 
-Step-by-step guide for wiring [Base MCP](https://docs.base.org/ai-agents/quickstart) into an AI coding agent (Claude Code used here) so it can read the Klima Protocol liquidity, prepare retirements, and settle them from a Base Account.
+Step-by-step guide for wiring [Base MCP](https://docs.base.org/ai-agents/quickstart) into an AI coding agent (Claude Code used here) so it can read retirable carbon credits from the Carbonmark marketplace and Klima Protocol, prepare retirements, and settle them from a Base Account.
 
 > **Upstream change, 27 October 2026.** The `base-mcp` skill this guide installs in step 3 was removed from `base/skills`; Coinbase now maintains it as `wallet-mcp` in [`coinbase/agents`](https://github.com/coinbase/agents). Steps 3 and 4 below describe the earlier layout and have not yet been rewritten for the new one. The HTTP endpoint and the SDK do not depend on Base MCP.
 
-> **What you get:** a non-custodial Base Account wallet exposed to the agent via `mcp.base.org`, plus the Klima retirement plugin that turns "retire 1 tonne of wind energy" into an on-chain `[approve, retire]` batch and a public Carbonmark certificate.
+> **What you get:** a non-custodial Base Account wallet exposed to the agent via `mcp.base.org`, plus the Carbonmark x402 plugin that turns "retire 1 tonne of wind energy" into an on-chain `[approve, retire]` batch and a public Carbonmark certificate.
 
 ## Prerequisites
 
@@ -60,7 +60,7 @@ In a Claude Code session:
 
 ## 3. Install the skill bundle (gives you the plugin layer)
 
-The MCP **server** provides wallet tools. The Base **skill** provides the onboarding flow and the protocol plugin routing (Morpho, Uniswap, **Klima**, …). Install default base skills:
+The MCP **server** provides wallet tools. The Base **skill** provides the onboarding flow and the protocol plugin routing (Morpho, Uniswap, …). Install default base skills:
 
 ```bash
 # global install (recommended): run from home so it lands in ~/.claude/skills/
@@ -81,19 +81,19 @@ Confirm:
 ls ~/.claude/skills/base-mcp/plugins/   # or <project>/.claude/skills/base-mcp/plugins/ for a local install
 ```
 
-## 4. Add the Klima plugin
+## 4. Add the Carbonmark x402 plugin
 
-The Base skill bundle does **not** ship Klima; you add it as a custom plugin. Two steps are required.
+The Base skill bundle does **not** ship this plugin; you add it as a custom plugin. Two steps are required.
 
-> **Which file:** use **`klima-retire.md`**
+> **Which file:** use **`carbonmark-x402.md`**
 
 1. Copy the plugin into the skill's `plugins/` directory:
    ```bash
-   cp plugins/klima-retire.md .claude/skills/base-mcp/plugins/klima-retire.md
+   cp plugins/carbonmark-x402.md .claude/skills/base-mcp/plugins/carbonmark-x402.md
    ```
 2. **Register it in `.claude/skills/base-mcp/SKILL.md`** — this step is crucial. Add a row to the **Plugins** routing table so the agent knows when to open it:
    ```
-   | [Klima](plugins/klima-retire.md) | Retire / offset carbon credits, buy carbon offsets. | discover, quote, prepare/retire, certificate | Base only. Always chainId=8453. |
+   | [Carbonmark x402](plugins/carbonmark-x402.md) | Retire / offset carbon credits, buy carbon offsets. | discover, quote, prepare/retire, certificate | Base only. Always chainId=8453. |
    ```
 
 ## 5. Restart and verify
@@ -133,7 +133,7 @@ rm -rf .claude/skills/base-mcp        # or ~/.claude/skills/base-mcp
 | `base-mcp` missing from `/mcp`        | Added mid-session — **restart Claude Code**; the list loads at startup.                                                                                           |
 | Server only works in one project      | It's in local scope — re-add with `--scope user` (see step 1 gotcha).                                                                                             |
 | Skill installed but plugins not found | `npx skills add` ran in the wrong directory — check `~/.claude/skills` vs `<project>/.claude/skills`.                                                             |
-| Agent doesn't reach for Klima         | Missing routing row in `SKILL.md` Plugins table (step 4.2), or installed plugin copy is stale — re-copy and restart.                                              |
+| Agent doesn't reach for the plugin    | Missing routing row in `SKILL.md` Plugins table (step 4.2), or installed plugin copy is stale — re-copy and restart.                                              |
 | "Needs authentication" persists       | Re-run `/mcp` → Authenticate; complete the Base Account OAuth in the browser.                                                                                     |
 | Retirement reverts on-chain           | Insufficient input-token balance on **Base mainnet**, or amount below the class minimum (1 kg) — see the error catalog in [x402-endpoint.md](./x402-endpoint.md). |
 | `send_calls` fails before confirming  | No **ETH** for gas in the Base Account. The input token (USDC/kVCM) covers the retirement cost + fee, but gas is paid in ETH — fund the account with a small amount of ETH on Base mainnet.                        |
