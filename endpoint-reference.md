@@ -8,23 +8,23 @@
 
 > Page content for **https://www.klimalabs.com/x402-endpoint**
 
-Retire tokenized carbon credits on **Base** through the Klima Protocol Retirement Aggregator straight from an AI agent or any HTTP client. The endpoint discovers retirable carbon, prices it live, hands back unsigned `[approve, retire]` calldata, and resolves the public Carbonmark certificate once the transaction confirms.
+Retire tokenized carbon credits on **Base** straight from an AI agent or any HTTP client, from two sources of liquidity: the **Carbonmark marketplace**, where sellers list tokenized carbon credits, and **Klima Protocol**, a market maker for certain tokenized carbon credits. The endpoint discovers retirable carbon, prices it live, hands back unsigned `[approve, retire]` calldata, and resolves the public Carbonmark certificate once the transaction confirms.
 
-> **Base URL:** `https://x402.klimalabs.com/api`
+> **Base URL:** `https://x402.carbonmark.com/api`
 > **Chain:** Base mainnet (`chainId=8453`) only
 > **Auth:** none on the HTTP layer.
 > **Cost:** Discover, quote and certificate are free. Retiring is paid: each retirement costs the credit price plus a fee (and executor gas when relayed through `actions/retire`). `GET /api/catalog` is a $0.001 x402 snapshot of the most liquid supply.
-> **Agent manifest:** `https://x402.klimalabs.com/.well-known/x402.json`
-> **Agent plugin + setup docs:** [github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation)
+> **Agent manifest:** `https://x402.carbonmark.com/.well-known/x402.json`
+> **Agent plugin + setup docs:** [github.com/Carbonmark/x402-retire-sdk](https://github.com/Carbonmark/x402-retire-sdk)
 
 ## Why x402
 
-The endpoint is built for the [x402](https://www.x402.org/) agent-payments ecosystem and plugs directly into [Base MCP](https://docs.base.org/ai-agents/quickstart): an agent reads the catalog, prepares a retirement, and submits the batch through the user's Base Account wallet in a single approval. See the [Base MCP setup guide](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/base-mcp-setup.md) for the connection steps. 
+The endpoint is built for the [x402](https://www.x402.org/) agent-payments ecosystem and plugs directly into [Base MCP](https://docs.base.org/ai-agents/quickstart): an agent reads the catalog, prepares a retirement, and submits the batch through the user's Base Account wallet in a single approval. See the [Base MCP setup guide](https://github.com/Carbonmark/x402-retire-sdk/blob/main/base-mcp-setup.md) for the connection steps. 
 
 Two ways to retire:
 
 - **Build-your-own (paid from your wallet):** `discover` → `quote` → `prepare/retire` hands back unsigned `[approve, retire]` calldata that **you** submit from a Base Account (e.g. via Base MCP). Reads are free; the batch you submit pays the credit price plus a fee, and you pay the gas.
-- **Paid relay (sign once, no gas, no Base account):** `prepare-auth` → sign one EIP-712 token authorization → `actions/retire`. A Klima executor relays the retirement on-chain and **pays the gas**, reimbursed from your signed budget. Any third-party wallet or agent can do this — see [Paid retire (relay)](#paid-retire-relay--sign-once-no-gas) below.
+- **Paid relay (sign once, no gas, no Base account):** `prepare-auth` → sign one EIP-712 token authorization → `actions/retire`. The API's executor relays the retirement on-chain and **pays the gas**, reimbursed from your signed budget. Any third-party wallet or agent can do this — see [Paid retire (relay)](#paid-retire-relay--sign-once-no-gas) below.
 
 ## The read endpoints
 
@@ -48,8 +48,8 @@ Every entry carries a `source` tag (`"protocol"` | `"marketplace"`). `marketplac
 Filters are optional, AND-combined, and apply to **both** arrays (`maxUsdcPricePerTonne=20` means ≤ $20/tonne; `source=marketplace` returns listings alone). A per-credit filter also trims a matched class down to its matching credits. Project metadata is joined per **credit**, not per class — a class spans projects, so its own country/category/methodologies are an aggregate. `chainId` is **not** accepted here.
 
 ```bash
-curl "https://x402.klimalabs.com/api/discover?maxUsdcPricePerTonne=15"
-curl "https://x402.klimalabs.com/api/discover?source=marketplace&country=BR"
+curl "https://x402.carbonmark.com/api/discover?maxUsdcPricePerTonne=15"
+curl "https://x402.carbonmark.com/api/discover?source=marketplace&country=BR"
 ```
 
 > **Reference price ≠ price at size.** `priceUsdcPerTonne` is the **marginal/spot** price (accurate near 1 tonne). Large orders walk up the AAM curve e.g. Biochar quoted ~$107.82/t at 1 t but ~$386.61/t for 100 t (≈ 58% of pool liquidity). Always call `/quote` for the true cost of your size.
@@ -80,12 +80,12 @@ The two sources differ in ways that matter before you sign:
 A listing fill can fail in ways pooled supply cannot, because the seller sets the terms and other buyers compete for the same supply: `listing_not_found`, `listing_expired`, `below_min_fill`, `insufficient_listing_supply`.
 
 ```bash
-curl "https://x402.klimalabs.com/api/quote?chainId=8453\
+curl "https://x402.carbonmark.com/api/quote?chainId=8453\
 &inputToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\
 &carbonClass=0xf4699531e0a5f6e9351a36de3753deaad329bf45&amount=1.5"
 
 # same call against a marketplace listing
-curl "https://x402.klimalabs.com/api/quote?chainId=8453\
+curl "https://x402.carbonmark.com/api/quote?chainId=8453\
 &inputToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\
 &listingId=0x1f0c…&amount=1.5"
 ```
@@ -167,9 +167,11 @@ The API carries a semantic version, published as `apiVersion`. The **major** is 
 
 | Host | Serves |
 | --- | --- |
-| `x402.klimalabs.com` | the **latest** release. Moves across majors — a breaking release moves it. |
-| `v1.x402.klimalabs.com` | the **v1 major**, and every future 1.x patch and minor. Never moves to v2. |
-| `v0.x402.klimalabs.com` | the previous major, still answering for callers that have not migrated. |
+| `x402.carbonmark.com` | the **latest** release. Moves across majors — a breaking release moves it. |
+| `v1.x402.carbonmark.com` | the **v1 major**, and every future 1.x patch and minor. Never moves to v2. |
+| `v0.x402.klimalabs.com` | the previous major, still answering for callers that have not migrated. Served on the klimalabs host only. |
+
+The same API also answers at `x402.klimalabs.com` and `v1.x402.klimalabs.com`, which follow the same rules as their carbonmark counterparts.
 
 Everything on this page describes **v1**. If your integration predates it and you are not ready for the [v1 breaking changes](#error-reference), point at `v0.x402.klimalabs.com` and migrate when you can — v0 is not being extended, only kept reachable.
 
@@ -191,7 +193,7 @@ Every release is an entry in the changelog with a `breaking` boolean, per-change
 
 ## Paid retire (relay) — sign once, no gas
 
-The relay path lets **any wallet or agent** retire without holding native ETH, without a prior token approval, and without a Base Account. You sign **one** standard EIP-712 token authorization; a Klima executor submits the on-chain transaction and is reimbursed for gas out of your signed budget.
+The relay path lets **any wallet or agent** retire without holding native ETH, without a prior token approval, and without a Base Account. You sign **one** standard EIP-712 token authorization; the API's executor submits the on-chain transaction and is reimbursed for gas out of your signed budget.
 
 > **You sign one token authorization, and it binds the retirement.** The only signature is a standard [EIP-3009](https://eips.ethereum.org/EIPS/eip-3009) `TransferWithAuthorization` (USDC) or [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612) `Permit` (kVCM) — exactly what any x402-style payment signs, so client signing stays plain `eth_signTypedData_v4` with no custom typed data to assemble.
 >
@@ -219,16 +221,16 @@ The relay path lets **any wallet or agent** retire without holding native ETH, w
 
 ### Client SDK
 
-The four steps are wrapped in a tiny, **zero-dependency** TypeScript client — [`sdk/x402-retire.ts`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/sdk/x402-retire.ts). Install it with `npm install @carbonmark/x402-retire`, or drop the single file into your project (same API). It's **signer-agnostic**: you pass a `signTypedData` callback, so it works with viem, ethers, a browser wallet, or an agent's signer with no hard wallet dependency.
+The four steps are wrapped in a tiny, **zero-dependency** TypeScript client — [`sdk/x402-retire.ts`](https://github.com/Carbonmark/x402-retire-sdk/blob/main/sdk/x402-retire.ts). Install it with `npm install @carbonmark/x402-retire`, or drop the single file into your project (same API). It's **signer-agnostic**: you pass a `signTypedData` callback, so it works with viem, ethers, a browser wallet, or an agent's signer with no hard wallet dependency.
 
 ```ts
 import { createClient } from "./x402-retire";
 import { privateKeyToAccount } from "viem/accounts"; // or ethers, or a browser wallet
 
 const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
-const klima = createClient(); // defaults to https://x402.klimalabs.com, chainId 8453
+const client = createClient(); // defaults to https://x402.carbonmark.com, chainId 8453
 
-const { status, transactionHash, retirements } = await klima.retire({
+const { status, transactionHash, retirements } = await client.retire({
   from: account.address,
   amount: "1",
   carbonClass: "0xf4699531e0a5f6e9351a36de3753deaad329bf45", // from discover()
@@ -250,7 +252,7 @@ An authorization signed against a `listingId` is valid for 5 minutes rather than
 
 **Other wallets:** ethers — `signTypedData: (td) => signer.signTypedData(td.domain, td.types, td.message)`; browser — `signTypedData: (td) => window.ethereum.request({ method: "eth_signTypedData_v4", params: [address, JSON.stringify(td)] })`.
 
-Runnable examples live in [`examples/`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/tree/main/examples): a read-only discover + quote script (safe to run, no wallet), the minimal SDK retire, and a raw-HTTP protocol walkthrough for porting to other languages.
+Runnable examples live in [`examples/`](https://github.com/Carbonmark/x402-retire-sdk/tree/main/examples): a read-only discover + quote script (safe to run, no wallet), the minimal SDK retire, and a raw-HTTP protocol walkthrough for porting to other languages.
 
 ### `actions/retire` responses
 
@@ -334,7 +336,7 @@ Every action can additionally return: `invalid_json`, `unknown_action`, `not_fou
 
 <!-- /generated:error-codes-by-action -->
 
-The same data is served live at [`/.well-known/x402-errors.json`](https://x402.klimalabs.com/.well-known/x402-errors.json) (GET alias `/api/errors`) — build error handling against that document rather than against this page.
+The same data is served live at [`/.well-known/x402-errors.json`](https://x402.carbonmark.com/.well-known/x402-errors.json) (GET alias `/api/errors`) — build error handling against that document rather than against this page.
 
 ## Inputs & contracts (Base mainnet)
 
@@ -354,11 +356,11 @@ Discover, quote and certificate are free; `GET /api/catalog` costs $0.001 per ca
 
 ## Use it from an AI agent
 
-The fastest path is the **Klima Base MCP plugin** — it wires this endpoint into any Base MCP–capable agent (e.g. Claude Code).
+The fastest path is the **Carbonmark x402 Base MCP plugin** — it wires this endpoint into any Base MCP–capable agent (e.g. Claude Code).
 
-1. **Install** — connect Base MCP and add the Klima plugin by following the **[Base MCP setup guide](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/base-mcp-setup.md)**.
-   - Plugin file to install: **[`plugins/klima-retire.md`](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/blob/main/plugins/klima-retire.md)**
-   - All docs: **[KlimaDAO/Klima-Protocol-x402-MCP-documentation](https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation)**
+1. **Install** — connect Base MCP and add the Carbonmark x402 plugin by following the **[Base MCP setup guide](https://github.com/Carbonmark/x402-retire-sdk/blob/main/base-mcp-setup.md)**.
+   - Plugin file to install: **[`plugins/carbonmark-x402.md`](https://github.com/Carbonmark/x402-retire-sdk/blob/main/plugins/carbonmark-x402.md)**
+   - All docs: **[Carbonmark/x402-retire-sdk](https://github.com/Carbonmark/x402-retire-sdk)**
 2. **Ask in plain language** — e.g. *"Retire 2 tonnes of carbon under $15/tonne, beneficiary 'Acme Corp'."*
 3. The agent runs `discover` → `quote` → `prepare/retire` → shows you the cost → submits **one** wallet approval → returns your certificate URL.
 

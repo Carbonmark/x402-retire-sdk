@@ -1,9 +1,9 @@
 {
-  "name": "klima-x402-examples",
+  "name": "carbonmark-x402-examples",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Runnable examples for paid carbon retirement via the Klima x402 endpoint.",
+  "description": "Runnable examples for paid carbon retirement via the x402 Carbon Retirement API.",
   "engines": {
     "node": ">=20",
     "npm": ">=11.10.0"

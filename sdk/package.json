@@ -18,11 +18,11 @@
   "homepage": "https://docs.carbonmark.com/carbonmark-x402/carbonmark-x402",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation.git",
+    "url": "git+https://github.com/Carbonmark/x402-retire-sdk.git",
     "directory": "sdk"
   },
   "bugs": {
-    "url": "https://github.com/KlimaDAO/Klima-Protocol-x402-MCP-documentation/issues"
+    "url": "https://github.com/Carbonmark/x402-retire-sdk/issues"
   },
   "type": "module",
   "sideEffects": false,

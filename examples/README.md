@@ -7,7 +7,7 @@
 # Carbon Retirement Examples
 
 Runnable examples of the **paid relay** path: you sign one standard token
-authorization, and a Klima executor submits the on-chain retirement and pays the
+authorization, and the API's executor submits the on-chain retirement and pays the
 gas (reimbursed out of your signed budget). You need an input-token balance
 (USDC or kVCM) but **no native ETH, no prior approval, and no Base Account**.
 
@@ -18,7 +18,7 @@ funds); **`retire/`** spends funds.
 | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`discover-quote/discover-quote.ts`](./discover-quote/discover-quote.ts) | **Read-only, safe to run as-is.** Browses both supply sources, picks the cheapest fill that can cover the amount, and prices it. No wallet needed. Prints the `carbonClass` or `listingId` to paste into the retire examples.                                                                            |
 | [`retire/retire-sdk.ts`](./retire/retire-sdk.ts)                         | **The retirement path.** The minimal happy path via the zero-dependency client in [`../sdk/x402-retire.ts`](../sdk/x402-retire.ts) — one `retire()` call does prepare-auth → sign → submit → poll certificate.                                                 |
-| [`retire/retire-raw.ts`](./retire/retire-raw.ts)                         | **Protocol walkthrough.** The same flow over plain HTTP + EIP-712 with no Klima dependencies. Read it to understand the wire protocol, or port it to another language. The four steps are the same everywhere. viem is declared in this folder's `package.json`. |
+| [`retire/retire-raw.ts`](./retire/retire-raw.ts)                         | **Protocol walkthrough.** The same flow over plain HTTP + EIP-712 without the SDK. Read it to understand the wire protocol, or port it to another language. The four steps are the same everywhere. viem is declared in this folder's `package.json`. |
 
 The retire examples produce a real retirement like this one:
 **[basescan.org/tx/0x31c7…9609](https://basescan.org/tx/0x31c70244536f2a828f46c1368f67cd39195ffb538e0f697644629edfd7319609)**
@@ -174,5 +174,5 @@ browser wallet, or an agent's signer:
 
 ---
 
-See the [endpoint reference](https://www.klimalabs.com/x402-endpoint) and the
+See the [OpenAPI document](https://x402.carbonmark.com/openapi.json) and the
 [SDK README](../sdk/README.md) for full details.
